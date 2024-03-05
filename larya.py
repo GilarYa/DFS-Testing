@@ -4,6 +4,9 @@ import sys
 import socket
 import pytz
 from datetime import datetime
+import os
+import subprocess
+
 def send_discord_log(start_state, goal_state, result_dfs):
     webhook_url = "https://discord.com/api/webhooks/1214634507077029969/poCBYG5JLEkQZ326WD3Zf6M9nCwQF51x6yh0f_A6VfE9FjTR_Tajg7Nu2xPaptKqLjx3"
     embed = discord.Embed(
@@ -24,7 +27,7 @@ def send_discord_log(start_state, goal_state, result_dfs):
     }
     requests.post(webhook_url, json=payload)
 
-# jangan di apa apain cuy
+# Jangan diubah yaa
 lar_graph = {
     'A': ['B', 'E'],
     'B': ['A', 'C'],
@@ -69,5 +72,15 @@ start_state = input("Masukkan inisial state: ")
 goal_state = input("Masukkan goal state: ")
 result_dfs = lar_dfs(lar_graph, start_state, goal_state)
 send_discord_log(start_state, goal_state, result_dfs)
-# Cetak hasil DFS
 print("Jalur tercepatnya dari", start_state, "ke", goal_state, "menggunakan DFS adalah:", result_dfs)
+
+# logika membuka gambar
+buka_gambar = input("Membuka gambar? (ya/tidak): ").lower()
+if buka_gambar == 'ya':
+    try:
+        subprocess.Popen(['open', 'mapping.png'])
+    except:
+        try:
+            subprocess.Popen(['xdg-open', 'mapping.png'])
+        except:
+            os.startfile('mapping.png')
