@@ -6,7 +6,7 @@ import pytz
 from datetime import datetime
 import os
 import subprocess
-
+# COBAIN DEBUG
 def send_discord_log(start_state, goal_state, result_dfs):
     webhook_url = "https://discord.com/api/webhooks/1214634507077029969/poCBYG5JLEkQZ326WD3Zf6M9nCwQF51x6yh0f_A6VfE9FjTR_Tajg7Nu2xPaptKqLjx3"
     embed = discord.Embed(
