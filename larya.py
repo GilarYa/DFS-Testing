@@ -75,7 +75,7 @@ send_discord_log(start_state, goal_state, result_dfs)
 print("Jalur tercepatnya dari", start_state, "ke", goal_state, "menggunakan DFS adalah:", result_dfs)
 
 # logika membuka gambar
-buka_gambar = input("Membuka gambar? (ya/tidak): ").lower()
+buka_gambar = input("Mau membuka gambar maping? (ya/tidak): ").lower()
 if buka_gambar == 'ya':
     try:
         subprocess.Popen(['open', 'mapping.png'])
