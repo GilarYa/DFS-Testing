@@ -2,3 +2,6 @@ requests
 discord
 pytz
 datetime
+pytube
+youtube-search-python
+pytube

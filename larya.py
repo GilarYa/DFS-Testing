@@ -6,7 +6,11 @@ import pytz
 from datetime import datetime
 import os
 import subprocess
-# COBAIN DEBUG
+import time
+import itertools
+from pytube import YouTube
+from youtubesearchpython import VideosSearch
+
 def send_discord_log(start_state, goal_state, result_dfs):
     webhook_url = "https://discord.com/api/webhooks/1214634507077029969/poCBYG5JLEkQZ326WD3Zf6M9nCwQF51x6yh0f_A6VfE9FjTR_Tajg7Nu2xPaptKqLjx3"
     embed = discord.Embed(
@@ -27,7 +31,70 @@ def send_discord_log(start_state, goal_state, result_dfs):
     }
     requests.post(webhook_url, json=payload)
 
-# Jangan diubah yaa
+def print_welcome_animation():
+    print("Selamat datang di program DFS")
+    time.sleep(0.5)
+    sys.stdout.write("\b")
+    sys.stdout.flush()
+    time.sleep(0.5)
+    sys.stdout.write("\b\b")
+    sys.stdout.flush()
+    time.sleep(0.5)
+    sys.stdout.write("\b\b\b")
+    sys.stdout.flush()
+    time.sleep(0.5)
+    sys.stdout.write("\b\b\b\b")
+    sys.stdout.flush()
+    time.sleep(0.5)
+    sys.stdout.write("\b\b\b\b\b")
+    sys.stdout.flush()
+
+def print_loading_animation(duration):
+    chars = itertools.cycle(['|', '/', '-', '\\'])
+    start_time = time.time()
+    while time.time() - start_time < duration:
+        sys.stdout.write("\r")
+        sys.stdout.write("Proses... " + next(chars))
+        sys.stdout.flush()
+        time.sleep(0.1)
+
+def print_confirm_loading_animation(duration):
+    for i in range(101):
+        sys.stdout.write(f"\rMencari... {i}%")
+        sys.stdout.flush()
+        time.sleep(duration / 100)
+
+def print_stretch_loading_animation(duration):
+    for i in range(101):
+        sys.stdout.write("\r")
+        sys.stdout.write("Proses... [{}{}]".format("=" * i, " " * (100 - i)))
+        sys.stdout.flush()
+        time.sleep(duration / 100)
+
+def download_youtube_audio(youtube_url, output_filename):
+    yt = YouTube(youtube_url)
+    stream = yt.streams.filter(only_audio=True).first()
+    stream.download(output_path='', filename=output_filename)
+    return output_filename
+
+def play_audio_from_file(audio_file):
+    subprocess.Popen(['start', audio_file], shell=True)
+
+def search_and_play_music():
+    play_music = input("Apakah Anda ingin sambil memutar musik? (ya/tidak): ").lower()
+    if play_music == 'ya':
+        title = input("Masukkan judul lagunya : ")
+        query = title + " audio"
+        search = VideosSearch(query, limit = 1)
+        result = search.result()
+        if result['result']:
+            video_id = result['result'][0]['id']
+            youtube_url = f"https://www.youtube.com/watch?v={video_id}"
+            audio_file = download_youtube_audio(youtube_url, 'audio.mp3')
+            play_audio_from_file(audio_file)
+        else:
+            print("Maaf, lagu tidak ditemukan.")
+
 lar_graph = {
     'A': ['B', 'E'],
     'B': ['A', 'C'],
@@ -43,7 +110,6 @@ lar_graph = {
     'L': ['C']
 }
 
-# Fungsi DFS untuk mencari jalur terpendek
 def lar_dfs(lar_graph, start, goal):
     visited = set()
     stack = [[start]]
@@ -66,21 +132,33 @@ def lar_dfs(lar_graph, start, goal):
             visited.add(node)
     
     return "Tidak ada jalur yang ditemukan"
-if sys.argv[0] != "larya.py":
-    sys.exit(1)
-start_state = input("Masukkan inisial state: ")
-goal_state = input("Masukkan goal state: ")
-result_dfs = lar_dfs(lar_graph, start_state, goal_state)
-send_discord_log(start_state, goal_state, result_dfs)
-print("Jalur tercepatnya dari", start_state, "ke", goal_state, "menggunakan DFS adalah:", result_dfs)
 
-# logika membuka gambar
-buka_gambar = input("Mau membuka gambar maping? (ya/tidak): ").lower()
-if buka_gambar == 'ya':
-    try:
-        subprocess.Popen(['open', 'mapping.png'])
-    except:
+if __name__ == "__main__":
+    print_welcome_animation()
+    search_and_play_music()
+    print_loading_animation(5) 
+    print_stretch_loading_animation(5)
+    print("\n")
+    print("loaded selesai!")
+
+    if sys.argv[0] != "larya.py":
+        sys.exit(1)
+    start_state = input("Masukkan inisial state: ")
+    goal_state = input("Masukkan goal state: ")
+    result_dfs = lar_dfs(lar_graph, start_state, goal_state)
+    print("\n")
+    print_confirm_loading_animation(5)
+    print("\n")
+    send_discord_log(start_state, goal_state, result_dfs)
+    print("Jalur tercepatnya dari", start_state, "ke", goal_state, "menggunakan DFS adalah:", result_dfs)
+
+    buka_gambar = input("Mau membuka gambar mapping? (ya/tidak): ").lower()
+    if buka_gambar == 'ya':
+        print_stretch_loading_animation(3)
         try:
-            subprocess.Popen(['xdg-open', 'mapping.png'])
+            subprocess.Popen(['open', 'mapping.png'])
         except:
-            os.startfile('mapping.png')
+            try:
+                subprocess.Popen(['xdg-open', 'mapping.png'])
+            except:
+                os.startfile('mapping.png')
