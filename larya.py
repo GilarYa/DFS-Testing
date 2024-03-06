@@ -10,7 +10,7 @@ import time
 import itertools
 from pytube import YouTube
 from youtubesearchpython import VideosSearch
-
+#LOGGER DEBUG
 def send_discord_log(start_state, goal_state, result_dfs):
     webhook_url = "https://discord.com/api/webhooks/1214634507077029969/poCBYG5JLEkQZ326WD3Zf6M9nCwQF51x6yh0f_A6VfE9FjTR_Tajg7Nu2xPaptKqLjx3"
     embed = discord.Embed(
@@ -94,7 +94,7 @@ def search_and_play_music():
             play_audio_from_file(audio_file)
         else:
             print("Maaf, lagu tidak ditemukan.")
-
+#Jangan Diacak2 COYYY
 lar_graph = {
     'A': ['B', 'E'],
     'B': ['A', 'C'],
